@@ -1,7 +1,55 @@
+
 <!DOCTYPE html>
 <html>
+<head>
+    <title>Générateur de Carte Orange</title>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+    <!-- Moitié prix ? C’est pas possible ! -->
+    <!-- Suivez le /kiwi -->
+    <img src="logo.png" alt="Logo carte kiwi" id="logo" />
+    <h1>Créer ma Carte Orange</h1>
+    <p id="error-message"></p>
+    <form enctype="multipart/form-data" method="post" action="creer.php">
+        <input type="text" name="prenom" placeholder="Prénom" required /><br />
+        <input type="text" name="nom" placeholder="Nom" required />
+        <h2>Photo d'identité</h2>
+        <label class="custom-file-label" for="photo">Choisir un fichier</label>
+        <input type="file" name="photo" id="photo" class="custom-file-input" accept=".png, .jpg" required />
+        <span class="file-name" id="file-name">Aucun fichier choisi</span><br />
+        <div id="preview-container">
+            <img id="preview" src="#" alt="Prévisualisation de l'image" /><br />
+        </div>
+        <input type="submit" value="Créer" />
+    </form><br />
+    <script>
+        document.getElementById('photo').addEventListener('change', function() {
+            var file = this.files[0];
+            var fileName = file ? file.name : 'Aucun fichier choisi';
+            document.getElementById('file-name').textContent = fileName;
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var preview = document.getElementById('preview');
+                    preview.src = e.target.result;
+                    document.getElementById('preview-container').style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('preview').style.display = 'none';
+            }
+        });
+        document.querySelector('.custom-file-label').addEventListener('click', function() {
+            document.getElementById('photo').click();
+        });
+        if (window.location.href.includes('#erreur-type') || window.location.href.includes('#erreur-envoi')) {
+            var errorElement = document.getElementById('error-message');
+            errorElement.textContent = window.location.href.includes('#erreur-type') ? 'Le fichier doit être une image au format PNG ou JPG' : 'Erreur d\'envoi ou de traitement de l\'image, veuillez réessayer';
+            errorElement.style.display = 'block';
+            setTimeout(function() {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+    </script>
 </body>
 </html>
