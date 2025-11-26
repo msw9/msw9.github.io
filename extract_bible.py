@@ -28,8 +28,14 @@ fr=soup.find(lang="fr")
 m_verses = mye.find_all('span')
 m_verses = clean_mye(list(m_verses))
 
+#Extraire les versets Français
+f_verses = fr.find_all('span',{'class':['ChapterContent_content__RrUqA','ChapterContent_label__R2PLt']}) # ou ('span',class_= False)
+f_verses = [x.get_text() for x in list(f_verses)]
+f_verses.remove(' ')
+f_verses = list(map(lambda x:"" if x=="#" else x,f_verses))
+f_verses = re.split(r'\d+',''.join(f_verses))
+f_verses.remove('')
 
-print(m_verses)
+print((len(m_verses),len(f_verses)))
     
-
 
