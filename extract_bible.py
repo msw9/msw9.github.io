@@ -36,6 +36,11 @@ f_verses = list(map(lambda x:"" if x=="#" else x,f_verses))
 f_verses = re.split(r'\d+',''.join(f_verses))
 f_verses.remove('')
 
-print((len(m_verses),len(f_verses)))
-    
+print((len(m_verses),len(f_verses))) #/!\ CHECK POINT
 
+results = list(zip(m_verses,f_verses))
+
+df = pd.DataFrame(results, columns = ['Myènè', 'Français'])
+
+df.to_csv('resultats.csv')
+print(df)
