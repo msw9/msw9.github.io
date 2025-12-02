@@ -3,10 +3,8 @@ from bs4 import BeautifulSoup
 import requests
 import os
 import re
-try:
-    os.remove("test.txt")
-except:
-    pass
+import pickle
+
 
 url = "https://www.bible.com/bible/3438/GEN.1.MYE?parallel=93"
 
@@ -18,7 +16,13 @@ def clean_mye(lst):
     lst=[x.get_text() for x in lst if not re.match(r"\d+",x.get_text())]
     return [x for x in lst if not re.match(r"\s+",x)]
 
-soup = BeautifulSoup(get_html(url),'html.parser')
+if os.path.isfile("bible.pkl"):
+    with open ("bible.pkl","rb") as f:
+        soup = pickle.load(f)
+else:            
+    soup = BeautifulSoup(get_html(url),'html.parser')
+    with open ("bible.pkl","wb") as f:
+        pickle.dump(soup,f)
 
 #Séparer la partie fr/mye
 mye= soup.find(lang="mye")
