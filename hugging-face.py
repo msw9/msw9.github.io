@@ -1,5 +1,5 @@
 from datasets import load_dataset
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, DataCollatorForSeq2Seq
 
 """
 TUTORIELS
@@ -19,13 +19,20 @@ split_datasets = raw_datasets["train"].train_test_split(train_size=0.9, seed=20)
 
 tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-tc-bible-big-aav-fra_ita_por_spa")
 
-max_length = 128 # à changer car nos phrases plus longues que dans tutoriel
+max_length = 128 # à changer (?) car nos phrases plus longues que dans tutoriel
 
-
+# I. PRE-PROCESS DATA
 tokenized_datasets = split_datasets.map(
     preprocess_function,
     batched=True,
     remove_columns=split_datasets["train"].column_names,
 )
 
-print(tokenized_datasets['train'][0])
+#print(tokenized_datasets['train'][0])
+
+# II. FINE-TUNING
+model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-tc-bible-big-aav-fra_ita_por_spa")
+data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
+
+batch = data_collator([tokenized_datasets["train"][i] for i in range(1, 3)])
+print(batch.keys())
